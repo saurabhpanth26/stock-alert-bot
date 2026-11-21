@@ -1,0 +1,8 @@
+services:
+  stock-alert-bot:
+    build: .
+    container_name: stock-alert-bot
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/app/data
