@@ -19,6 +19,8 @@ from storage import Storage
 
 logging.basicConfig(format="%(asctime)s %(levelname)s %(name)s: %(message)s", level=logging.INFO)
 logging.getLogger("httpx").setLevel(logging.WARNING)
+# With a 1s check interval a slow fetch can overlap the next tick; APScheduler skips it and warns — that's expected
+logging.getLogger("apscheduler.scheduler").setLevel(logging.ERROR)
 log = logging.getLogger("stockbot")
 
 store = Storage(config.DB_PATH)
@@ -617,7 +619,8 @@ def main():
     app.add_handler(MessageHandler(filters.REPLY & filters.TEXT & ~filters.COMMAND, on_reply_stop))
     app.add_error_handler(on_error)
 
-    app.job_queue.run_repeating(job_check_alerts, interval=config.CHECK_INTERVAL, first=10)
+    app.job_queue.run_repeating(job_check_alerts, interval=config.CHECK_INTERVAL, first=10,
+                                job_kwargs={"max_instances": 1, "coalesce": True})
     # Reminders run all the time (also after market close) until someone acknowledges
     app.job_queue.run_repeating(job_reminders, interval=min(15, config.REMIND_INTERVAL), first=15)
     if config.DAILY_SUMMARY:

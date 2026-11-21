@@ -104,7 +104,8 @@ def _fetch_quote_sync(ticker: str) -> Quote | None:
 
 
 _cache: dict[str, tuple[float, Quote]] = {}
-_CACHE_TTL = 20  # seconds
+# Keep quotes fresh enough for every check (slightly under the interval), but never longer than 20s
+_CACHE_TTL = min(20, config.CHECK_INTERVAL * 0.8)  # seconds
 _sem = asyncio.Semaphore(5)
 
 

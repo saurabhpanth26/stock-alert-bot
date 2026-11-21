@@ -61,7 +61,7 @@ WantedBy=multi-user.target
 | Variable | Default | Meaning |
 |---|---|---|
 | `TELEGRAM_BOT_TOKEN` | – | Token from BotFather (required) |
-| `CHECK_INTERVAL_SECONDS` | 60 | How often prices are checked |
+| `CHECK_INTERVAL_SECONDS` | 1 | How often prices are checked |
 | `ADMIN_ONLY` | false | Only group admins can add alerts / edit the watchlist |
 | `ALLOWED_CHAT_IDS` | empty | Comma-separated chat IDs the bot will respond in |
 | `MAX_ALERTS_PER_CHAT` | 100 | Limit per group |
@@ -74,5 +74,5 @@ WantedBy=multi-user.target
 ## Notes
 - **Data source:** Yahoo Finance via `yfinance`. It is free and needs no API key, but it is unofficial and quotes can lag by a few minutes, so it suits swing/positional alerts. For tick-accurate alerts, replace `_fetch_quote_sync()` in `market.py` with a broker API (Zerodha Kite, Upstox, Angel One SmartAPI, Dhan). Nothing else needs to change.
 - After an alert is acknowledged it moves to `/history`. Set a new alert to re-arm it. In `ADMIN_ONLY` mode, only the person who set an alert or an admin can acknowledge it; otherwise anyone in the group can.
-- Each check makes one request per unique symbol. A few dozen symbols at 60s intervals is fine. For hundreds of symbols, increase the interval or switch to a broker feed.
+- Each check makes one request per unique symbol. At the default 1s interval, keep it to a handful of symbols — Yahoo may rate-limit heavier use (raise the interval to 5–10s if you see failed fetches). For hundreds of symbols, increase the interval or switch to a broker feed.
 - This bot gives price notifications only. It is not investment advice.

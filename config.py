@@ -27,7 +27,7 @@ BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 DB_PATH = os.getenv("DATA_FILE", "data/alerts.json")
 
 # How often to check prices (seconds)
-CHECK_INTERVAL = int(os.getenv("CHECK_INTERVAL_SECONDS", "60"))
+CHECK_INTERVAL = max(1, int(os.getenv("CHECK_INTERVAL_SECONDS", "1")))
 
 # If true, only group admins can add/delete alerts in a group
 ADMIN_ONLY = _bool("ADMIN_ONLY", False)
