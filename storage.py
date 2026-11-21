@@ -37,6 +37,10 @@ class Storage:
             if "status" not in a:
                 a["status"] = "active" if a.pop("active", True) else "done"
             a.pop("active", None)
+        try:  # fail at startup, not on the first /alert, if the data folder isn't writable
+            self._save()
+        except OSError as exc:
+            raise SystemExit(f"Can't write {path}: {exc}. Make the data folder writable by the bot user.") from exc
 
     def _save(self):
         tmp = self.path + ".tmp"

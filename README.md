@@ -29,7 +29,7 @@ cp .env.example .env      # paste your token
 docker compose up -d --build
 docker compose logs -f
 ```
-Alerts are saved in `./data/alerts.json` (a plain JSON file, no database), which survives restarts.
+Alerts are saved in `alerts.json` (a plain JSON file, no database) inside the `bot-data` Docker volume, which survives restarts and rebuilds. To back it up: `docker compose cp stock-alert-bot:/app/data/alerts.json .`
 
 ## 3. Or run directly
 ```bash

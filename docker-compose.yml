@@ -5,4 +5,9 @@ services:
     restart: unless-stopped
     env_file: .env
     volumes:
-      - ./data:/app/data
+      # Named volume: Docker creates it owned by the container's `bot` user, so saving always works.
+      # (A ./data bind mount is created as root on Linux servers and the bot can't write to it.)
+      - bot-data:/app/data
+
+volumes:
+  bot-data:
